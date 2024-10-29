@@ -1,0 +1,167 @@
+Age Calculator with the required features using JavaScript and Luxon
+ for date manipulation
+
+ Step 1: Project Setup
+Create a project structure:
+
+/age-calculator
+|-- index.html
+|-- style.css
+|-- script.js
+
+Step 2: Install Luxon Library
+Include Luxon in your project via a CDN. You can also install it
+ via npm if you use a bundler like Webpack.
+
+ <!-- Inside index.html -->
+<script src="https://cdn.jsdelivr.net/npm/luxon@3.0.0/build/global/luxon.min.js"></script>
+
+Step 3: Code Implementation
+1. index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Age Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Age Calculator</h1>
+
+    <form id="ageForm">
+      <label for="birthdate">Select your birthdate:</label>
+      <input type="text" id="datepicker" placeholder="YYYY-MM-DD" readonly />
+      <button type="submit">Calculate Age</button>
+    </form>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.0/build/global/luxon.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
+2. style.css
+/* Styling for the container */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  text-align: center;
+}
+
+input {
+  padding: 10px;
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.result {
+  margin-top: 20px;
+  font-size: 1.2em;
+}
+
+3. script.js
+
+// Import Luxon DateTime
+const { DateTime } = luxon;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const datepicker = document.getElementById('datepicker');
+  const result = document.getElementById('result');
+  const form = document.getElementById('ageForm');
+
+  // Initialize the custom datepicker
+  datepicker.addEventListener('focus', function () {
+    this.type = 'date'; // Switch to date input on focus
+  });
+
+  datepicker.addEventListener('blur', function () {
+    if (!this.value) this.type = 'text'; // Revert to text if no value is selected
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevent form submission
+
+    const birthdate = datepicker.value;
+    if (!birthdate) {
+      result.textContent = 'Please select a valid birthdate.';
+      return;
+    }
+
+    const now = DateTime.now();
+    const dob = DateTime.fromISO(birthdate);
+
+    if (dob > now) {
+      result.textContent = 'Birthdate cannot be in the future.';
+      return;
+    }
+
+    const diff = now.diff(dob, ['years', 'months', 'days']).toObject();
+    const { years, months, days } = diff;
+
+    result.textContent = `You are ${Math.floor(years)} years, ${Math.floor(months)} months, and ${Math.floor(days)} days old.`;
+  });
+});
+
+
+Explanation
+Custom Datepicker:
+
+The input is initially of type text. When the user focuses on it, it switches to a date input for picking a date.
+On blur, it reverts back to a text input if no date is selected.
+Form Submission Handling:
+
+When the user submits the form, we prevent the default form submission behavior and validate the birthdate.
+If the birthdate is valid, we calculate the age using the Luxon library.
+Age Calculation:
+
+We use Luxon’s diff() method to calculate the difference between the current date and the user’s birthdate in years, months, and days.
+Validation:
+
+The script ensures that the birthdate is not in the future.
+If the user submits without entering a date, it shows an appropriate message.
+How to Run the App
+Download the files or copy the code into your project folder.
+Open the index.html file in a browser.
+The custom datepicker will show when you focus on the input field.
+After selecting a date, click the Calculate Age button to see the result.
+This project is responsive and easy to use. It demonstrates how to:
+
+Use Luxon for date manipulation.
+Manage form input and validation.
+Create a custom datepicker and enhance user interaction with basic styling.
